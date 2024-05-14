@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:23:58 by hzaz              #+#    #+#             */
-/*   Updated: 2024/05/14 06:20:53 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:33:15 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ int	return_if_sig(int status, int l)
 static void	handle_sigint(int sig)
 {
 	ft_putstr_fd("\n", STDOUT_FILENO);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	// rl_on_new_line();
+	// rl_replace_line("", 0);
+	// rl_redisplay();
 }
 
 /* signal handling for the parent process*/

@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:54:44 by vabertau          #+#    #+#             */
-/*   Updated: 2024/05/14 06:22:18 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:32:52 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,24 @@ void	trim_env(t_data *shell)
 	shell->env = tmp;
 }
 
+t_env	*create_env_node(char *env_str, int index)
+{
+	t_env	*node;
+
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+	node->var = ft_strdup(env_str);
+	node->index = index;
+	node->next = NULL;
+	if (!node->var)
+	{
+		free(node);
+		return (NULL);
+	}
+	return (node);
+}
+
 t_env	*copy_envp(char **envp, t_data *shell)
 {
 	t_env	*head;
@@ -106,34 +124,21 @@ t_env	*copy_envp(char **envp, t_data *shell)
 
 	i = 0;
 	head = NULL;
-	tmp = NULL;
 	while (envp[i])
 	{
-		if (tmp == NULL)
-		{
-			tmp = malloc(sizeof(t_env));
-			if (!tmp)
-				return (NULL);
-			if (head == NULL)
-				head = tmp;
-		}
-		tmp->var = ft_strdup(envp[i]);
-		tmp->index = i;
-		tmp->next = NULL;
-		if (!tmp->var)
+		tmp = create_env_node(envp[i], i);
+		if (!tmp)
 			return (NULL);
-		if (envp[i + 1] != NULL)
-		{
-			tmp->next = malloc(sizeof(t_env));
-			if (!tmp->next)
-				return (NULL);
-			tmp = tmp->next;
-		}
+		if (head == NULL)
+			head = tmp;
+		else
+			shell->env->next = tmp;
+		shell->env = tmp;
 		i++;
 	}
-	shell->env = head;
 	return (head);
 }
+
 
 int	minishell_loop(t_data *data)
 {

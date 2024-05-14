@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 21:08:17 by hedi              #+#    #+#             */
-/*   Updated: 2024/05/14 06:21:07 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:49:07 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,7 @@ void	exec_build(t_data *shell, char **f)
 		return ;
 	exit_free(shell, 0);
 }
-// Aucun built-in correspondant trouvé
-// if (ft_same_str(f[0], "echo", 4))
-// 	ft_echo(f);
-// else if (ft_same_str(f[0], "cd", 2))
-// 	ft_cd();
-// printf("test");
+
 
 void	exec_path(t_data *sh, t_exec *cmd, char **f, char *tmp)
 {

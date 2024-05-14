@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 00:47:00 by hedi              #+#    #+#             */
-/*   Updated: 2024/05/14 06:23:33 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 07:28:34 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,61 +151,53 @@ int	check_plus(char *s)
 void	ft_update_env(char *str, t_data *shell, int pos)
 {
 	char	**s;
-	int		index;
 	t_env	*tmp;
+	char	*new_val;
 
 	s = split_var(str, shell);
-	tmp = shell->env;
 	if (!s)
 		return ;
-	if (!s[1] || !s[1][0])
-	{
-		if (tmp->var)
-		{
-			free(tmp->var);
-			tmp->var = ft_strdup(str);
-		}
-	}
-	else if (have_equal(str) && (!s[1] || !s[1][0]))
-	{
-		while (tmp && tmp->index < pos)
-			tmp = tmp->next;
-		if (tmp->var)
-		{
-			free(tmp->var);
-			tmp->var = ft_strjoin(str, "''");
-		}
+	tmp = shell->env;
+	while (tmp && tmp->index < pos)
+		tmp = tmp->next;
+	if (!tmp)
 		return ;
+	if (!s[1] || !s[1][0])
+	{ // Cas où la valeur est vide ou non définie
+		free(tmp->var);
+		tmp->var = ft_strjoin(tmp->var_name, "=\"\""); // Ajout de guillemets
+		free(tmp->val);
+		tmp->val = ft_strdup("");
 	}
 	else if (check_plus(str))
 	{
-		while (tmp && tmp->index < pos)
-			tmp = tmp->next;
-		tmp->val = join_free1(tmp->val, s[1]);
-		if (!tmp->val)
-			exit_free_perror("malloc", shell, -2);
+		if (!tmp)
+		{
+			fprintf(stderr, "bash: export: `%s': not valid in this context\n",
+				str);
+			free(s[0]);
+			if (s[1])
+				free(s[1]);
+			free(s);
+			return ;
+		}
+		new_val = join_free1(tmp->val, s[1]);
+		free(tmp->val);
+		tmp->val = new_val;
 		free(tmp->var);
 		tmp->var = join_free1(ft_strjoin(tmp->var_name, "="), tmp->val);
-		if (!tmp->var)
-			exit_free_perror("malloc", shell, -2);
 	}
 	else
 	{
-		while (tmp && tmp->index < pos)
-			tmp = tmp->next;
-		if (s[1] || have_equal(tmp->var))
-		{
-			if (tmp->val)
-				free(tmp->val);
-			tmp->val = ft_strdup(s[1]);
-			if (!tmp->val)
-				exit_free_perror("malloc", shell, -2);
-		}
+		free(tmp->val);
+		tmp->val = ft_strdup(s[1]);
 		free(tmp->var);
 		tmp->var = join_free1(ft_strjoin(tmp->var_name, "="), tmp->val);
-		if (!tmp->var)
-			exit_free_perror("malloc", shell, -2);
 	}
+	free(s[0]);
+	if (s[1])
+		free(s[1]);
+	free(s);
 }
 
 void	ft_add_env(char *s, t_data *shell)
@@ -220,19 +212,26 @@ void	ft_add_env(char *s, t_data *shell)
 	new_node = malloc(sizeof(t_env));
 	if (!new_node)
 		exit_free_perror("malloc", shell, -2);
-	if (!str[1])
+	new_node->var_name = ft_strdup(str[0]);
+	new_node->next = NULL;
+	if ((!str[1] || !str[1][0]) && have_equal(s))
 	{
-		new_node->var = ft_strdup(str[0]);
-		new_node->var_name = ft_strdup(str[0]);
-		new_node->val = NULL;
-		new_node->next = NULL;
+		// Cas où `export yy=` est utilisé,
+
+		new_node->var = ft_strjoin(str[0], "=\"\"");
+		new_node->val = ft_strdup("\"\"");
+	}
+	else if (str[1] != NULL)
+	{
+		// Cas où une valeur est assignée, par exemple `export yy=somevalue`
+		new_node->var = join_free1(ft_strjoin(str[0], "="), str[1]);
+		new_node->val = ft_strdup(str[1]);
 	}
 	else
 	{
-		new_node->var = join_free1(ft_strjoin(str[0], "="), str[1]);
-		new_node->var_name = ft_strdup(str[0]);
-		new_node->val = str[1] ? ft_strdup(str[1]) : NULL;
-		new_node->next = NULL;
+		// Cas où seulement `export yy` est utilisé, sans `=`
+		new_node->var = ft_strdup(str[0]);
+		new_node->val = NULL; // Pas de valeur assignée
 	}
 	if (shell->env == NULL)
 	{
@@ -247,6 +246,11 @@ void	ft_add_env(char *s, t_data *shell)
 		e->next = new_node;
 		new_node->index = e->index + 1;
 	}
+	// Libérer la mémoire allouée par split_var
+	free(str[0]);
+	if (str[1] != NULL)
+		free(str[1]);
+	free(str);
 }
 
 int	ft_putenv(char *s, t_data *shell)
@@ -370,13 +374,9 @@ int	ft_unset(t_data *shell, char **split_cmd)
 		if (current != NULL)
 		{
 			if (prev == NULL)
-			{
 				shell->env = current->next;
-			}
 			else
-			{
 				prev->next = current->next;
-			}
 			free_single_env(current);
 			decrem_env(prev ? prev->next : shell->env);
 		}
