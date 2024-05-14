@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 15:02:38 by vabertau          #+#    #+#             */
-/*   Updated: 2024/05/14 02:04:45 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 03:28:51 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ void	free_exec(t_data *data)
 
 void	free_all(t_data *data)
 {
+	int	i;
+
+	i = -1;
 	if (data->cmdline != NULL)
 		free(data->cmdline);
 	if (data->token)
@@ -46,7 +49,13 @@ void	free_all(t_data *data)
 		free(data->is_bq);
 	if (data->pipe_fds)
 		free(data->pipe_fds);
-	
+	if (data->char_env)
+	{
+		while (data->char_env[++i])
+			if (data->char_env[i])
+				free(data->char_env[i]);
+		free(data->char_env);
+	}
 }
 
 void	exit_free(t_data *data, int exit_code)

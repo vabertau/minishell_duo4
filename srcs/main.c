@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:54:44 by vabertau          #+#    #+#             */
-/*   Updated: 2024/05/14 02:06:57 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 04:09:32 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	set_char_env(t_data *shell)
 
 	// if(shell->char_env)
 	// 	free(shell->char_env);
+	
 	i = -1;
 	tmp = shell->env;
 	len = len_env(tmp);
@@ -182,7 +183,6 @@ int	main(int argc, char **argv, char **envp)
 		minishell_loop(&data);
 		// if (!data.sh_exit_loop)
 		free_all(&data);
-		free(data.char_env);
 		// printf("\n%d\n", data.last_return_code);
 	}
 	return (0);

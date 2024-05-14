@@ -34,7 +34,6 @@ typedef enum s_type
 typedef struct s_env
 {
 	int				index;
-	char			**first_env;
 	char			*var;
 	char			*var_name;
 	char			*val;
@@ -45,6 +44,7 @@ typedef struct s_token
 {
 	int				i;
 	char			*word;
+	char			*full_path;
 	t_type			type;
 	int				fd;
 	struct s_token	*next;
@@ -147,6 +147,7 @@ void				set_exitloop_free(t_data *data);
 void				free_all(t_data *data);
 void				free_token(t_token *token);
 void free_env(t_data *shell);
+void	free_single_env(t_env *e);
 
 // ====== BUILTINS ======
 
@@ -227,8 +228,8 @@ int					ft_putenv(char *s, t_data *shell);
 void				ft_printf_var_env(char *var);
 int					check_cmd(char *s);
 int					ft_export(char **split_cmd, t_data *shell);
-int					ft_unset(char **split_cmd);
-int					ft_env(char **envp);
+int					ft_unset(t_data *shell, char **split_cmd);
+int					ft_env(t_data *shell, char **s);
 
 /* Function prototype for ft_exit */
 int					ft_exit(char **split_cmd, t_data *data);

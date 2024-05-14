@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   finish_him.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabertau <vabertau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 21:08:17 by hedi              #+#    #+#             */
-/*   Updated: 2024/05/13 17:17:16 by vabertau         ###   ########.fr       */
+/*   Updated: 2024/05/14 03:29:21 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	exec_build(t_data *shell, char **f)
 	else if (ft_same_str(f[0], "export", 6))
 		shell->last_return_code = ft_export(f, shell);
 	else if (ft_same_str(f[0], "unset", 5))
-		shell->last_return_code = ft_unset(f);
+		shell->last_return_code = ft_unset(shell, f);
 	else if (ft_same_str(f[0], "env", 3))
-		shell->last_return_code = ft_env(shell->envp);
+		shell->last_return_code = ft_env(shell, f);
 	else if (ft_same_str(f[0], "exit", 4))
 		ft_exit(f, shell); // Note que cette fonction peut arrêter le programme.
 	else

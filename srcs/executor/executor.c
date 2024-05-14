@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 17:43:54 by hzaz              #+#    #+#             */
-/*   Updated: 2024/05/13 21:47:38 by hzaz             ###   ########.fr       */
+/*   Updated: 2024/05/14 04:27:19 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,9 @@ int	special_built(t_exec *cmd, t_data *shell)
 	else if (ft_same_str(f[0], "export", 6))
 		return (ft_export(f, shell));
 	else if (ft_same_str(f[0], "unset", 5))
-		return (ft_unset(f));
+		return (ft_unset(shell, f));
 	else if (ft_same_str(f[0], "env", 3))
-		return (ft_env(shell->envp));
+		return (ft_env(shell, f));
 	else if (ft_same_str(f[0], "exit", 4))
 		return (ft_exit(f, shell));
 	shell->spec_built = FALSE;
@@ -133,7 +133,7 @@ int	executor(t_data *shell)
 	ret = special_built(shell->exec, shell);
 	if (shell->spec_built)
 		return (ret);
-	printf("\ntest\n");
+	//printf("\ntest\n");
 	fork_cmd(shell);
 	close_wait(shell);
 	return (shell->last_return_code);
