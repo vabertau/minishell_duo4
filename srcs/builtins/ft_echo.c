@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:27:39 by vabertau          #+#    #+#             */
-/*   Updated: 2024/05/13 22:17:33 by hzaz             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:23:31 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	str_is_num(char *s)
 
 int	ft_exit(char **split_cmd, t_data *data)
 {
-	int exit_status;
+	int	exit_status;
 
 	exit_status = 0;
 	if (!split_cmd)
@@ -67,24 +67,12 @@ int	ft_exit(char **split_cmd, t_data *data)
 	{
 		if (split_cmd[1] != NULL && str_is_num(split_cmd[1]))
 			exit_status = ft_atoi(split_cmd[1]);
-		if (split_cmd[1] != NULL  && !str_is_num(split_cmd[1]))
+		if (split_cmd[1] != NULL && !str_is_num(split_cmd[1]))
 		{
 			ft_putstr_fd("exit: numeric argument required", 2);
 			exit_status = 2;
 		}
 	}
-
 	exit_free(data, exit_status);
-	return (exit_status); // This will end the program
+	return (exit_status);
 }
-
-
-/*
-int	main(int argc, char **argv)
-{
-	if (argc < 2)
-		return (-1);
-	ft_echo(&(argv[1]));
-	return (0);
-}
-*/

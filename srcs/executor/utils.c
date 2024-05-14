@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 21:06:09 by hedi              #+#    #+#             */
-/*   Updated: 2024/05/12 17:02:20 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:23:42 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ int	ft_same_str_exact_free1(char *str1, char *str2)
 		free(str1);
 		return (0);
 	}
-	while ( str1 && str2 && str1[i] && str2[i])
+	while (str1 && str2 && str1[i] && str2[i])
 	{
 		if (str1[i] != str2[i])
 		{
@@ -146,13 +146,13 @@ int	ft_same_str_exact_free1(char *str1, char *str2)
 
 int	ft_same_str_exact(char *str1, char *str2)
 {
-	int	i;
-	//printf("\ntest1\n");
+	int i;
+	
 	i = 0;
 	if (ft_strlen(str1) != ft_strlen(str2))
 		return (0);
 	printf("%s\n%s\n", str1, str2);
-	while ( str1 && str2 && str1[i] && str2[i])
+	while (str1 && str2 && str1[i] && str2[i])
 	{
 		if (str1[i] != str2[i])
 		{
@@ -163,6 +163,6 @@ int	ft_same_str_exact(char *str1, char *str2)
 	}
 	if (str1[i] || str2[i])
 		return (0);
-	
+
 	return (1);
 }

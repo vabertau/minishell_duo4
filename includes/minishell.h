@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/14 06:27:10 by hedi              #+#    #+#             */
+/*   Updated: 2024/05/14 06:27:11 by hedi             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -148,6 +160,7 @@ void				free_all(t_data *data);
 void				free_token(t_token *token);
 void free_env(t_data *shell);
 void	free_single_env(t_env *e);
+void	exit_free_perror(char *s, t_data *data, int exit_code);
 
 // ====== BUILTINS ======
 

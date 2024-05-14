@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 12:44:07 by vabertau          #+#    #+#             */
-/*   Updated: 2024/05/14 04:33:13 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:25:37 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	free_single_env(t_env *e)
 	e = NULL;
 }
 
-void free_env(t_data *shell)
+void	free_env(t_data *shell)
 {
 	t_env	*tmp;
 	int		i;

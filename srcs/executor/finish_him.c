@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 21:08:17 by hedi              #+#    #+#             */
-/*   Updated: 2024/05/14 03:29:21 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:21:07 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,14 @@ void	exec_path(t_data *sh, t_exec *cmd, char **f, char *tmp)
 	int		j;
 	int		k;
 	char	*ret;
-	t_env *e;
+	t_env	*e;
 
 	i = -1;
 	e = sh->env;
 	while (e)
 	{
-
-
 		if (ft_same_str(e->var_name, "PATH", 4))
 		{
-
 			j = -1;
 			while (e->val && e->val[++j])
 			{
@@ -63,7 +60,7 @@ void	exec_path(t_data *sh, t_exec *cmd, char **f, char *tmp)
 				while (e->val[j] != ':' && e->val[j] && e->val)
 					j++;
 				ret = join_free1(ft_substr(e->val, k, ((j)-k)), tmp);
-				//printf("\ntest1: %s\n", ret);
+				// printf("\ntest1: %s\n", ret);
 				if (e->val[j] == ':')
 					if (access(ret, F_OK) == 0)
 					{
@@ -78,9 +75,9 @@ void	exec_path(t_data *sh, t_exec *cmd, char **f, char *tmp)
 
 void	exec_cmd(t_data *shell, t_exec *cmd)
 {
-	char *ret;
-	char *tmp;
-	char **f;
+	char	*ret;
+	char	*tmp;
+	char	**f;
 
 	handle_redirections(cmd, shell);
 	f = cmd->split_cmd;

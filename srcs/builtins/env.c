@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 00:47:00 by hedi              #+#    #+#             */
-/*   Updated: 2024/05/14 03:56:15 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:23:33 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,7 @@ int	var_in_env(char *s, t_data *shell)
 	var = split_var(s, shell);
 	tmp = shell->env;
 	if (!var)
-	{
-		perror("malloc");
-		exit_free(shell, EXIT_FAILURE);
-	}
+		exit_free_perror("malloc", shell, -2);
 	ret = -1;
 	j = -1;
 	while (tmp)
@@ -131,12 +128,10 @@ int	var_in_env(char *s, t_data *shell)
 			ret = tmp->index;
 		tmp = tmp->next;
 	}
-	// printf("\ntest\n");
 	if (var[1])
 		free(var[1]);
 	free(var[0]);
 	free(var);
-	// printf("\ntest\n");
 	return (ret);
 }
 int	check_plus(char *s)
@@ -164,16 +159,21 @@ void	ft_update_env(char *str, t_data *shell, int pos)
 	if (!s)
 		return ;
 	if (!s[1] || !s[1][0])
-		return ;
-	if (have_equal(str) && (!s[1] || !s[1][0]))
+	{
+		if (tmp->var)
+		{
+			free(tmp->var);
+			tmp->var = ft_strdup(str);
+		}
+	}
+	else if (have_equal(str) && (!s[1] || !s[1][0]))
 	{
 		while (tmp && tmp->index < pos)
 			tmp = tmp->next;
-		if (!have_equal(tmp->var))
+		if (tmp->var)
 		{
-			if (tmp->var)
-				free(tmp->var);
-			tmp->var = ft_strdup(str);
+			free(tmp->var);
+			tmp->var = ft_strjoin(str, "''");
 		}
 		return ;
 	}
@@ -183,11 +183,11 @@ void	ft_update_env(char *str, t_data *shell, int pos)
 			tmp = tmp->next;
 		tmp->val = join_free1(tmp->val, s[1]);
 		if (!tmp->val)
-			perror("malloc");
+			exit_free_perror("malloc", shell, -2);
 		free(tmp->var);
 		tmp->var = join_free1(ft_strjoin(tmp->var_name, "="), tmp->val);
 		if (!tmp->var)
-			perror("malloc");
+			exit_free_perror("malloc", shell, -2);
 	}
 	else
 	{
@@ -199,12 +199,12 @@ void	ft_update_env(char *str, t_data *shell, int pos)
 				free(tmp->val);
 			tmp->val = ft_strdup(s[1]);
 			if (!tmp->val)
-				perror("malloc");
+				exit_free_perror("malloc", shell, -2);
 		}
 		free(tmp->var);
 		tmp->var = join_free1(ft_strjoin(tmp->var_name, "="), tmp->val);
 		if (!tmp->var)
-			perror("malloc");
+			exit_free_perror("malloc", shell, -2);
 	}
 }
 
@@ -219,10 +219,7 @@ void	ft_add_env(char *s, t_data *shell)
 		return ;
 	new_node = malloc(sizeof(t_env));
 	if (!new_node)
-	{
-		perror("malloc");
-		return ; // Gérer l'échec de l'allocation plus proprement si nécessaire
-	}
+		exit_free_perror("malloc", shell, -2);
 	if (!str[1])
 	{
 		new_node->var = ft_strdup(str[0]);
@@ -239,22 +236,17 @@ void	ft_add_env(char *s, t_data *shell)
 	}
 	if (shell->env == NULL)
 	{
-		shell->env = new_node; // Cas où la liste était vide
+		shell->env = new_node;
 		new_node->index = 0;
 	}
 	else
 	{
 		e = shell->env;
 		while (e->next != NULL)
-			e = e->next; // Parcourir jusqu'au dernier élément
+			e = e->next;
 		e->next = new_node;
 		new_node->index = e->index + 1;
 	}
-	// if (!new_node->var || !new_node->val || !new_node->var_name)
-	// {
-	// 	perror("malloc");
-	// 	// Doit gérer la libération de la mémoire allouée précédemment
-	// }
 }
 
 int	ft_putenv(char *s, t_data *shell)
@@ -330,11 +322,8 @@ int	ft_export(char **split_cmd, t_data *shell)
 				2);
 			ret = 1;
 		}
-		else if (ft_putenv(split_cmd[i], shell) != 1) // Add to the environment
-		{
-			perror("export");
-			exit_free(shell, EXIT_FAILURE);
-		}
+		else if (ft_putenv(split_cmd[i], shell) != 1)
+			exit_free_perror("export", shell, 1);
 	}
 	return (ret);
 }
@@ -382,14 +371,13 @@ int	ft_unset(t_data *shell, char **split_cmd)
 		{
 			if (prev == NULL)
 			{
-				shell->env = current->next; // Head of the list case
+				shell->env = current->next;
 			}
 			else
 			{
-				prev->next = current->next; // Middle or end of the list
+				prev->next = current->next;
 			}
 			free_single_env(current);
-				// Supposes a function to free node and its data
 			decrem_env(prev ? prev->next : shell->env);
 		}
 		i++;

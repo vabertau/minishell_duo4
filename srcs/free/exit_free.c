@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 15:02:38 by vabertau          #+#    #+#             */
-/*   Updated: 2024/05/14 03:28:51 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:23:46 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void	free_exec(t_data *data)
 	}
 }
 
-// SHOULD NOT EXIT AS MINISHELL IS A LOOP GIVING BACK PROMPT
-
 void	free_all(t_data *data)
 {
 	int	i;
@@ -56,6 +54,14 @@ void	free_all(t_data *data)
 				free(data->char_env[i]);
 		free(data->char_env);
 	}
+}
+
+void	exit_free_perror(char *s, t_data *data, int exit_code)
+{
+	ft_putstr_fd(s, 2);
+	free_all(data);
+	free_env(data);
+	exit(exit_code);
 }
 
 void	exit_free(t_data *data, int exit_code)

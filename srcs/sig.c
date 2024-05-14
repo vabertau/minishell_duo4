@@ -6,12 +6,11 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:23:58 by hzaz              #+#    #+#             */
-/*   Updated: 2024/05/14 02:03:51 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:20:53 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
 
 int	return_if_sig(int status, int l)
 {
@@ -22,23 +21,23 @@ int	return_if_sig(int status, int l)
 	return (128 + WTERMSIG(status));
 }
 
-static void handle_sigint(int sig)
+static void	handle_sigint(int sig)
 {
 	ft_putstr_fd("\n", STDOUT_FILENO);
-	// rl_on_new_line(); // cursor of readline on a nl so that next input occurs on nl
-	// rl_replace_line("", 0); //clear current input replacing it with empty string
-	// rl_redisplay(); // redisplays the prompt and the empty input line
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 /* signal handling for the parent process*/
 void	main_signals(void)
 {
-	struct sigaction sigint;
-	struct sigaction sigquit;
+	struct sigaction	sigint;
+	struct sigaction	sigquit;
 
 	sigint.sa_flags = 0;
 	sigint.sa_handler = &handle_sigint;
-	//sigint.sa_handler = SIG_DFL;
+	// sigint.sa_handler = SIG_DFL;
 	sigquit.sa_handler = SIG_IGN;
 	sigquit.sa_flags = 0;
 	sigemptyset(&sigint.sa_mask);
@@ -49,7 +48,8 @@ void	main_signals(void)
 
 void	execute_signals(int pid)
 {
-	struct sigaction sig;
+	struct sigaction	sig;
+
 	sig.sa_flags = 0;
 	sigemptyset(&sig.sa_mask);
 	if (pid == 0)
@@ -60,25 +60,26 @@ void	execute_signals(int pid)
 	sigaction(SIGQUIT, &sig, NULL);
 }
 
-static void heredoc_sigint(int sig)
+static void	heredoc_sigint(int sig)
 {
-	//int	mem_stdin;
-
-	//mem_stdin = dup(STDIN_FILENO);
+	// int	mem_stdin;
+	// mem_stdin = dup(STDIN_FILENO);
 	close(STDIN_FILENO);
-	//dup(STDIN_FILENO);
- //ft_putstr_fd("\n", STDOUT_FILENO);
-//	rl_on_new_line(); // cursor of readline on a nl so that next input occurs on nl
-	//rl_replace_line("", 0); //clear current input replacing it with empty string
-	//rl_redisplay();
-	//dup2(mem_stdin, STDIN_FILENO);
+	// dup(STDIN_FILENO);
+	// ft_putstr_fd("\n", STDOUT_FILENO);
+	//	rl_on_new_line();
+			// cursor of readline on a nl so that next input occurs on nl
+	// rl_replace_line("", 0);
+		//clear current input replacing it with empty string
+	// rl_redisplay();
+	// dup2(mem_stdin, STDIN_FILENO);
 }
 
 void	heredoc_signals(void)
 {
-	struct sigaction sigint;
-	struct sigaction sigquit;
-	int	mem_stdin;
+	struct sigaction	sigint;
+	struct sigaction	sigquit;
+	int					mem_stdin;
 
 	mem_stdin = dup(STDIN_FILENO);
 	sigint.sa_flags = 0;
@@ -90,11 +91,11 @@ void	heredoc_signals(void)
 	sigaction(SIGINT, &sigint, NULL);
 	sigaction(SIGQUIT, &sigquit, NULL);
 	dup2(mem_stdin, STDIN_FILENO);
-	//printf("here\n");
+	// printf("here\n");
 }
 
 /*
-int		g_signal_count = 0;
+int			g_signal_count = 0;
 
 void	handle_sigint_interactive(int sig)
 {

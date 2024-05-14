@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:54:44 by vabertau          #+#    #+#             */
-/*   Updated: 2024/05/14 04:09:32 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:22:18 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	aff_val(t_data *data)
 int	len_env(t_env *env)
 {
 	t_env	*tmp;
-	int i;
+	int		i;
 
 	tmp = env;
 	i = 0;
@@ -58,20 +58,17 @@ void	set_char_env(t_data *shell)
 	int		len;
 	int		i;
 
-	// if(shell->char_env)
-	// 	free(shell->char_env);
-	
 	i = -1;
 	tmp = shell->env;
 	len = len_env(tmp);
 	shell->char_env = malloc(sizeof(char *) * (len + 1));
 	if (!shell->char_env)
-		perror("malloc");
+		exit_free_perror("malloc", shell, -2);
 	while (++i < len && tmp)
 	{
 		shell->char_env[i] = ft_strdup(tmp->var);
 		if (!shell->char_env[i])
-			perror("malloc");
+			exit_free_perror("malloc", shell, -2);
 		tmp = tmp->next;
 	}
 	shell->char_env[i] = NULL;
@@ -89,19 +86,17 @@ void	trim_env(t_data *shell)
 		while (shell->env->var[i] && shell->env->var[i] != '=')
 			i++;
 		shell->env->var_name = ft_strndup(shell->env->var, i);
-
 		if (!shell->env->var_name)
-			perror("malloc");
+			exit_free_perror("malloc", shell, -2);
 		if (!shell->env->var[i++])
 			return ;
 		shell->env->val = ft_strdup(shell->env->var + i);
 		if (!shell->env->val)
-			perror("malloc");
+			exit_free_perror("malloc", shell, -2);
 		shell->env = shell->env->next;
 	}
 	shell->env = tmp;
 }
-
 
 t_env	*copy_envp(char **envp, t_data *shell)
 {
@@ -140,7 +135,6 @@ t_env	*copy_envp(char **envp, t_data *shell)
 	return (head);
 }
 
-
 int	minishell_loop(t_data *data)
 {
 	data->sh_exit_loop = 0;
@@ -153,7 +147,6 @@ int	minishell_loop(t_data *data)
 	parser(data);
 	if (data->sh_exit_loop)
 		return (-1);
-	// aff_val(data);
 	data->last_return_code = executor(data);
 	return (0);
 }
@@ -161,9 +154,8 @@ int	minishell_loop(t_data *data)
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
-	t_env *e;
-	// volatile sig_atomic_t signal_count = 0;
-	//setup_signal_handlers(handle_sigint_interactive, handle_sigquit);
+	t_env	*e;
+
 	(void)argc;
 	(void)argv;
 	data.char_env = NULL;
@@ -172,23 +164,16 @@ int	main(int argc, char **argv, char **envp)
 	trim_env(&data);
 	data.envp = envp;
 	data.char_env = NULL;
-
-
 	while (1)
 	{
-
 		set_char_env(&data);
 		main_signals();
 		init_data(&data);
 		minishell_loop(&data);
-		// if (!data.sh_exit_loop)
 		free_all(&data);
-		// printf("\n%d\n", data.last_return_code);
 	}
 	return (0);
-	// exit_free(&data, 0); //tmp
 }
-
 
 /*
 int	main(int argc, char **argv, char **envp)

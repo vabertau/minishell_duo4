@@ -6,7 +6,7 @@
 /*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 21:03:31 by hedi              #+#    #+#             */
-/*   Updated: 2024/05/14 04:36:12 by hedi             ###   ########.fr       */
+/*   Updated: 2024/05/14 06:02:14 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 void	handle_input_redirection(t_token *redir, t_data *shell)
 {
 	redir->fd = safe_open(redir->word, O_RDONLY, 0, shell);
-	if (redir->fd == -1)
-	{
-		perror("open");
-		exit_free(shell, EXIT_FAILURE);
-	}
 	safe_dup2(redir->fd, STDIN_FILENO, shell);
 	safe_close(redir->fd, shell);
 }
@@ -33,11 +28,6 @@ void	handle_output_redirection(t_token *redir, t_data *shell)
 	if (redir->type == RIGHT2)
 		fd = safe_open(redir->word, O_WRONLY | O_CREAT | O_APPEND, 0644, shell);
 	redir->fd = fd;
-	if (redir->fd == -1)
-	{
-		perror("open");
-		exit_free(shell, EXIT_FAILURE);
-	}
 	if (redir->next == NULL || redir->next->type != RIGHT1
 		|| redir->next->type != RIGHT2)
 		safe_dup2(redir->fd, STDOUT_FILENO, shell);
