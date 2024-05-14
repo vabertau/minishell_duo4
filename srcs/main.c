@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:54:44 by vabertau          #+#    #+#             */
-/*   Updated: 2024/05/13 17:57:01 by hzaz             ###   ########.fr       */
+/*   Updated: 2024/05/14 02:06:57 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,21 +167,22 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	data.char_env = NULL;
 	data.last_return_code = 0;
-
+	data.env = copy_envp(envp, &data);
+	trim_env(&data);
 	data.envp = envp;
 	data.char_env = NULL;
 
 
 	while (1)
 	{
-		data.env = copy_envp(envp, &data);
-		trim_env(&data);
+
 		set_char_env(&data);
 		main_signals();
 		init_data(&data);
 		minishell_loop(&data);
 		// if (!data.sh_exit_loop)
 		free_all(&data);
+		free(data.char_env);
 		// printf("\n%d\n", data.last_return_code);
 	}
 	return (0);

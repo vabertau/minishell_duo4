@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sig.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vabertau <vabertau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hedi <hedi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 15:23:58 by hzaz              #+#    #+#             */
-/*   Updated: 2024/05/13 16:39:32 by vabertau         ###   ########.fr       */
+/*   Updated: 2024/05/14 02:03:51 by hedi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ int	return_if_sig(int status, int l)
 static void handle_sigint(int sig)
 {
 	ft_putstr_fd("\n", STDOUT_FILENO);
-	rl_on_new_line(); // cursor of readline on a nl so that next input occurs on nl
-	rl_replace_line("", 0); //clear current input replacing it with empty string
-	rl_redisplay(); // redisplays the prompt and the empty input line
+	// rl_on_new_line(); // cursor of readline on a nl so that next input occurs on nl
+	// rl_replace_line("", 0); //clear current input replacing it with empty string
+	// rl_redisplay(); // redisplays the prompt and the empty input line
 }
 
 /* signal handling for the parent process*/
